@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BallController : MonoBehaviour {
+public class BallController : MonoBehaviour
+{
 
-    public float torque;
-    
-    private Rigidbody rigidbody;
+    public float torque = 15f;
 
-    public BallController()
-    {
-        torque = 15f;
-    }
+    new private Rigidbody rigidbody;
 
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
+
+        rigidbody.angularDrag = 0;
+        rigidbody.maxAngularVelocity = 100;
     }
 
     private void FixedUpdate()
@@ -29,8 +28,6 @@ public class BallController : MonoBehaviour {
         Vector3 torqueAxis = Vector3.Cross(direction, Vector3.up);
         torqueAxis.Normalize();
 
-        rigidbody.AddTorque(torqueAxis * torque, ForceMode.Acceleration);
-
-        Debug.DrawLine(transform.position, transform.position + torqueAxis, Color.magenta, Time.fixedDeltaTime);
+        rigidbody.AddTorque(torqueAxis * torque * Time.fixedDeltaTime, ForceMode.VelocityChange);
     }
 }
